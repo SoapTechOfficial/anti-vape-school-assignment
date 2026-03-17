@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vape? Think Twice.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050816;
+      --accent: #ff4b81;
+      --accent-soft: #ff9fbf;
+      --text-main: #f5f5f5;
+      --text-muted: #b3b3c2;
+      --card-bg: #111827;
+      --danger: #ff6b6b;
+      --good: #4ade80;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(15,23,42,0.9), rgba(24,24,27,0.9));
+      border-bottom: 1px solid rgba(148,163,184,0.3);
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      color: var(--accent-soft);
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-left: 1.2rem;
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3.5rem 1.2rem 2.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.7);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-soft);
+      margin-bottom: 1rem;
+    }
+
+    .hero-tag span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(255,75,129,0.9);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      line-height: 1.1;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(120deg, #f97316, #fb7185, #a855f7);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      max-width: 32rem;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .btn-primary {
+      border: none;
+      cursor: pointer;
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: #0b1120;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(248,113,113,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(248,113,113,0.45);
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: transparent;
+      color: var(--text-main);
+      padding: 0.65rem 1.2rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-ghost span.arrow {
+      font-size: 1rem;
+      transform: translateY(1px);
+    }
+
+    .hero-note {
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 260px;
+    }
+
+    .glass-card {
+      position: relative;
+      border-radius: 1.4rem;
+      padding: 1.4rem;
+      background: radial-gradient(circle at top left, rgba(248,113,113,0.25), transparent 55%),
+                  linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.85));
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.9);
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0, rgba(248,113,113,0.25), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(56,189,248,0.25), transparent 55%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .glass-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .glass-main {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .glass-main span {
+      color: var(--danger);
+    }
+
+    .glass-list {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: grid;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .glass-list li::before {
+      content: "✖";
+      color: var(--danger);
+      margin-right: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .glass-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.8);
+      color: var(--text-muted);
+    }
+
+    .badge.red {
+      border-color: rgba(248,113,113,0.9);
+      color: var(--danger);
+      background: rgba(127,29,29,0.4);
+    }
+
+    .badge.green {
+      border-color: rgba(74,222,128,0.9);
+      color: var(--good);
+      background: rgba(22,101,52,0.4);
+    }
+
+    .glass-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .glass-footer strong {
+      color: var(--text-main);
+    }
+
+    .floating-pill {
+      position: absolute;
+      right: -10px;
+      top: 18%;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      background: conic-gradient(from 180deg, #f97316, #fb7185, #a855f7, #22d3ee, #f97316);
+      filter: blur(10px);
+      opacity: 0.7;
+      animation: float 6s ease-in-out infinite alternate;
+    }
+
+    .floating-stat {
+      position: absolute;
+      bottom: -10px;
+      right: 10px;
+      padding: 0.6rem 0.9rem;
+      border-radius: 0.9rem;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      backdrop-filter: blur(10px);
+    }
+
+    .floating-stat strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--accent-soft);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(-12px) translateX(-6px); }
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 26rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      padding: 1.1rem 1.1rem 1rem;
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow: 0 14px 30px rgba(15,23,42,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(248,113,113,0.18), transparent 55%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-body {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      color: var(--accent-soft);
+    }
+
+    .facts-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+    }
+
+    .fact-pill {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      color: var(--text-muted);
+    }
+
+    .quiz {
+      margin-top: 1.2rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 55%),
+                  #020617;
+      border: 1px solid rgba(148,163,184,0.5);
+    }
+
+    .quiz h3 {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .quiz p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .quiz-options button {
+      text-align: left;
+      border-radius: 0.7rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-main);
+      padding: 0.5rem 0.7rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .quiz-options button:hover {
+      background: rgba(30,64,175,0.9);
+      transform: translateY(-1px);
+    }
+
+    .quiz-result {
+      font-size: 0.85rem;
+      min-height: 1.1rem;
+    }
+
+    .quiz-result.correct {
+      color: var(--good);
+    }
+
+    .quiz-result.wrong {
+      color: var(--danger);
+    }
+
+    .cta {
+      text-align: center;
+      padding-bottom: 3rem;
+    }
+
+    .cta h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cta p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    footer {
+      border-top: 1px solid rgba(148,163,184,0.4);
+      padding: 0.9rem 1.2rem 1.4rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      background: #020617;
+    }
+
+    footer span {
+      color: var(--accent-soft);
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-visual {
+        order: -1;
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .grid-3 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="logo">NO VAPE ZONE</div>
+      <nav class="nav-links">
+        <a href="#risks">Risks</a>
+        <a href="#myths">Myths</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#take-action">Take action</a>
+      </nav>
+    </div>
+  </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <div class="hero-tag">
+            <span class="dot"></span>
+            <span>School project • Health & wellbeing</span>
+          </div>
+          <h1>
+            Vaping looks <span>harmless</span>—<br />
+            your lungs know the truth.
+          </h1>
+
+          <p class="slogan">Go for Lungs & Life.</p>
+          
+          <p>
+            Vapes are marketed with bright colours and sweet flavours, but many contain nicotine and chemicals that can
+            damage your lungs, affect your brain, and make it harder to focus at school and in sport.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="scrollToSection('risks')">
+              See the real risks
+            </button>
+            <button class="btn-ghost" onclick="scrollToSection('quiz')">
+              Test what you know <span class="arrow">➜</span>
+            </button>
+          </div>
+          <p class="hero-note">
+            Built as a school assessment to raise awareness and support healthier choices.
+          </p>
+        </div>
+
+        <div class="hero-visual">
+          <div class="floating-pill"></div>
+          <div class="glass-card">
+            <div class="glass-inner">
+              <div class="glass-title">Inside a typical vape</div>
+              <div class="glass-main">
+                Not just “water vapour”. It can include <span>nicotine, metals, and chemicals.</span>
+              </div>
+              <ul class="glass-list">
+                <li>Nicotine can change how your brain develops.</li>
+                <li>Flavouring chemicals can irritate lungs.</li>
+                <li>Heavy metals may come from the device coil.</li>
+              </ul>
+              <div class="glass-badge-row">
+                <span class="badge red">Addictive</span>
+                <span class="badge red">Not harmless</span>
+                <span class="badge green">Quitting is possible</span>
+              </div>
+              <div class="glass-footer">
+                <span>Short-term “buzz”</span>
+                <span><strong>Long-term cost</strong> to health</span>
+              </div>
+            </div>
+          </div>
+          <div class="floating-stat">
+            <strong>Better choice:</strong>
+            Fresh air, real energy, clear mind.
+          </div>
+        </div>
+      </section>
+
+      <section id="risks" class="section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Why vaping is a problem, not a trend</h2>
+          </div>
+          <p class="section-subtitle">
+            Even if “everyone is doing it”, your body doesn’t care about trends. It reacts to chemicals, nicotine, and
+            addiction—no matter how cool the device looks.
+          </p>
+        </div>
+
+        <div class="grid grid-3">
+          <article class="card">
+            <div class="card-label">Health</div>
+            <h3 class="card-title">Your lungs aren’t a science experiment</h3>
+            <p class="card-body">
+              Vaping can irritate and inflame your airways, making it harder to breathe during sport and everyday
+              activities. Some people report coughing, chest tightness, and shortness of breath.
+            </p>
+            <div class="card-tag">Breathing should feel easy, not heavy.</div>
+          </article>
+
+          <article class="card">
+            <div class="card-label">Brain</div>
+            <h3 class="card-title">Nicotine rewires your focus</h3>
+            <p class="card-body">
+              In young people, nicotine can affect brain development, especially areas linked to attention, learning,
+              and mood. That “hit” can quickly turn into cravings that distract you from school and hobbies.
+            </p>
+            <div class="card-tag">Short buzz, long distraction.</div>
+          </article>
+
+          <article class="card">
+            <div class="card-label">Money & freedom</div>
+            <h3 class="card-title">Paying to feel trapped</h3>
+            <p class="card-body">
+              Vapes cost money, and addiction costs freedom. The more your body expects nicotine, the harder it is to
+              feel “normal” without it—and the more you spend just to feel okay.
+            </p>
+            <div class="card-tag">Imagine that money going into your goals instead.</div>
+          </article>
+        </div>
+
+        <div class="facts-row">
+          <span class="fact-pill">Vapes can contain nicotine even when not clearly labelled.</span>
+          <span class="fact-pill">Flavours don’t make chemicals safe for your lungs.</span>
+          <span class="fact-pill">Saying “no” once makes it easier to say it again.</span>
+        </div>
+      </section>
+
+      <section id="myths" class="section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Myths vs reality</h2>
+          </div>
+          <p class="section-subtitle">
+            A lot of what you hear about vaping comes from friends, social media, or advertising. Let’s separate what
+            sounds good from what’s actually true.
+          </p>
+        </div>
+
+        <div class="grid grid-3">
+          <article class="card">
+            <div class="card-label">Myth</div>
+            <h3 class="card-title">“It’s just flavoured air.”</h3>
+            <p class="card-body">
+              Vape aerosol can contain nicotine, ultrafine particles, flavouring chemicals, and metals from the device.
+              It’s not the same as breathing in fresh air.
+            </p>
+            <div class="card-tag">Reality: Your lungs notice the difference.</div>
+          </article>
+
+          <article class="card">
+            <div class="card-label">Myth</div>
+            <h3 class="card-title">“I can stop whenever I want.”</h3>
+            <p class="card-body">
+              Nicotine is addictive. The more you use it, the more your brain expects it. Quitting is possible, but it
+              can be challenging—especially if you start young.
+            </p>
+            <div class="card-tag">Reality: It’s easier to never start.</div>
+          </article>
+
+          <article class="card">
+            <div class="card-label">Myth</div>
+            <h3 class="card-title">“Everyone vapes.”</h3>
+            <p class="card-body">
+              It can feel that way, but many students choose not to vape because they care about sport, music, mental
+              health, or just don’t want to be controlled by a device.
+            </p>
+            <div class="card-tag">Reality: Choosing health is its own kind of confidence.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="quiz" class="section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Quick check: what do you know?</h2>
+          </div>
+          <p class="section-subtitle">
+            Answer these questions and see if your ideas about vaping match what we know about health and addiction.
+          </p>
+        </div>
+
+        <div class="quiz">
+          <h3>Question 1</h3>
+          <p>Which statement is most accurate about vaping?</p>
+          <div class="quiz-options">
+            <button onclick="checkAnswer(1, 'a')">A. It’s just water vapour with flavour.</button>
+            <button onclick="checkAnswer(1, 'b')">B. It can contain nicotine and other chemicals that affect health.</button>
+            <button onclick="checkAnswer(1, 'c')">C. It’s completely safe if you’re under 18.</button>
+          </div>
+          <div id="quiz-result-1" class="quiz-result"></div>
+        </div>
+
+        <div class="quiz" style="margin-top: 1rem;">
+          <h3>Question 2</h3>
+          <p>What is one reason it’s harder to quit vaping after starting young?</p>
+          <div class="quiz-options">
+            <button onclick="checkAnswer(2, 'a')">A. Your body becomes immune to nicotine.</button>
+            <button onclick="checkAnswer(2, 'b')">B. Nicotine can affect brain development and create strong cravings.</button>
+            <button onclick="checkAnswer(2, 'c')">C. Your lungs get stronger and demand more.</button>
+          </div>
+          <div id="quiz-result-2" class="quiz-result"></div>
+        </div>
+      </section>
+
+      <section id="take-action" class="section cta">
+        <h2>Choosing yourself over a device</h2>
+        <p>
+          You deserve lungs that can keep up with your dreams, a brain that can focus, and a life that isn’t controlled
+          by cravings. Saying “no” to vaping is saying “yes” to all of that.
+        </p>
+        <div class="cta-row">
+          <button class="btn-primary" onclick="scrollToSection('hero')">
+            Re-read the facts
+          </button>
+          <button class="btn-ghost" onclick="alert('Idea: Talk to a trusted adult, school counsellor, or friend if you or someone you know is struggling with vaping.')">
+            Support a friend
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Anti-vaping awareness site • <span>School assessment project</span> • Designed to inform, not to replace professional advice.
+    </footer>
+
+    <script>
+      function scrollToSection(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      function checkAnswer(question, choice) {
+        const answers = {
+          1: "b",
+          2: "b"
+        };
+
+        const resultEl = document.getElementById("quiz-result-" + question);
+        if (!resultEl) return;
+
+        if (choice === answers[question]) {
+          resultEl.textContent = "Correct – vaping can contain nicotine and chemicals that affect health.";
+          resultEl.className = "quiz-result correct";
+        } else {
+          resultEl.textContent = "Not quite. Check the info above and try again.";
+          resultEl.className = "quiz-result wrong";
+        }
+      }
+    </script>
+</body>
+</html>
